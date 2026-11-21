@@ -6,11 +6,28 @@ A free guitar practice app that runs in your browser. It covers theory, techniqu
 
 **Built with AI.** AI Guitar Lab was built entirely with AI (Claude, by Anthropic). Every line of code and every lesson was written by AI.
 
+## Contents
+
+- [What's new](#whats-new)
+- [What's inside](#whats-inside)
+- [How to open it](#how-to-open-it)
+- [Your data](#your-data)
+- [Suggestions, ideas and bug reports](#suggestions-ideas-and-bug-reports)
+- [Licence](#licence)
+- [Instrument sample credits](#instrument-sample-credits)
+
+## What's new
+
+- **Tab drawn like a tab book.** Lines wrap down the screen to fit your phone or computer, so there's no sideways scrolling. During playback the page scrolls itself to follow along, so both hands stay on the guitar. The notation is drawn in the style of pro tab software: curved bend arrows marked ½, full or 1½, releases and pre-bends, slurs with H and P for hammer-ons and pull-offs, slide lines, wavy vibrato lines, P.M. brackets, harmonics, tapping, bar numbers and the rhythm under every note.
+- **Speed coach on every lick.** Each lick gets a start tempo, a target tempo and a step. You can raise the tempo yourself, let it go up automatically every two loops, or turn on the Listen coach, which goes up a step after two passes scoring 90 or more. A Bursts mode plays one beat, two beats or a bar at the target tempo. There's also a short guide to building speed, with yardsticks for 16th notes at intermediate, advanced and shred levels. The finger drills get a start tempo and target tempo too.
+- **Theory made simple.** Sixteen short lessons, one idea each. Every lesson has the idea in one sentence, sounds to hear, the shape on the neck, a tab to play, famous songs that use it, a two-minute task and a quick check.
+- **Easier first.** In Practice, the shorter, easier pieces come first, and the longer, faster ones sit under "Go further".
+
 ## What's inside
 
 - **Home**: a daily whole-neck challenge, a roadmap from intermediate to advanced, and a 28-day course.
 - **Practice**: a Practice home that sorts everything by what it trains; a Scale playground (any key and scale, a backing groove, just play); six hubs of playable material (speed licks, acoustic pieces, triad songs, rhythm grooves, phrasing and feel, chord-tone licks); pick-up-and-play sessions, a finger technique ladder, a check-up, ear training, neck-note drills and public-domain songs with tab and sound.
-- **Theory**: six lessons, keys and the circle of fifths, CAGED shapes, triads, guide tones, intervals and a scale and mode explorer.
+- **Theory**: Theory made simple (16 one-idea lessons), then six workshops, keys and the circle of fifths, CAGED shapes, triads, guide tones, intervals and a scale and mode explorer.
 - **Styles**: blues, rock, acoustic and jazz lessons. Every lick can be moved up or down the neck.
 - **Tools**: a jam station with drums, bass and chords in five styles, a tuner, a tab builder, a metronome and a practice plan.
 - **Listen mode**: turn on the microphone and the app hears you play. Every tab player marks each note right, early, late, wrong or missed and gives a score with a coaching tip. Listen also works in Neck notes ("Play it"), Play it back (call-and-response ear training) and on the Jam station.
@@ -34,9 +51,15 @@ Sound uses the Web Audio API, so tap or click once on the page to let the browse
 
 There are no accounts, no tracking and no server. Your progress is saved in your browser's local storage on your device. If you clear your browser data, your progress is cleared with it. Microphone sound is analysed in the browser as you play. It is never recorded, saved or sent anywhere; only your scores are kept. The only outside request is for web fonts from Google Fonts. The instrument samples are stored inside `index.html`, so no sound files are downloaded from anywhere else.
 
-## Contributing
+## Suggestions, ideas and bug reports
 
-The project isn't taking contributions yet, but issues and suggestions are welcome.
+We're open to suggestions, recommendations and fixes, and we'd love to hear from you.
+
+- **Found a bug, or have an idea or a lesson request?** [Open an issue](https://github.com/AI-Guitar-Lab/ai-guitar-lab/issues/new). Tell us which page you were on, what you expected and what happened. For a tab or theory mistake, name the lesson or lick. You'll need a free GitHub account.
+- **Want to see what's already been suggested?** Browse the [issues list](https://github.com/AI-Guitar-Lab/ai-guitar-lab/issues), and add a 👍 or a comment to anything you'd like too.
+- **Want to fix something yourself?** The whole app is one file, `index.html`. Fork the repository, make your change and open a pull request that explains what it fixes.
+
+There's also a "Suggest an idea or report a bug" link at the bottom of every page in the app.
 
 ## Licence
 
