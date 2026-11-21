@@ -69,7 +69,7 @@ select,input[type=number]{font:inherit;font-size:.95rem;color:var(--ink);backgro
 .btn.small{min-height:32px;padding:4px 10px;font-size:.82rem}
 
 .neck-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 6px 4px}
-svg.neck{display:block;width:100%;min-width:880px;height:auto}
+svg.neck{display:block;width:100%;min-width:1180px;height:auto}
 .n-board{fill:var(--wood)} .n-edge{fill:var(--wood-edge)}
 .n-fret{stroke:var(--fret);stroke-width:2.2}
 .n-nut{fill:var(--nut)}
@@ -809,6 +809,15 @@ button.chip{font:inherit;cursor:pointer}
 .sl-opts .btn.wrong{border-color:var(--bad);color:var(--bad)}
 .sl-nav{margin-top:18px}
 @media (max-width:760px){.sl-layout{grid-template-columns:1fr}.sl-list{position:static;max-height:none;flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:6px}.sl-ch{display:none}.sl-item{flex:none;max-width:200px;border-color:var(--line)}}
+
+/* v5: page chips that wrap, so every page is visible with no sideways scrolling */
+nav.tabs#subnav{position:static;flex-wrap:wrap;overflow:visible;gap:6px;padding:10px 0 12px;align-items:center;backdrop-filter:none;-webkit-backdrop-filter:none;background:transparent}
+#subnav .tab{border:1px solid var(--line);border-radius:999px;padding:6px 12px;font:600 .84rem var(--f-body);background:var(--surface);color:var(--ink);white-space:nowrap;border-bottom-width:1px}
+#subnav .tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+#subnav .tab-sep{flex-basis:100%;border-left:0;margin:6px 0 0;padding:0 2px}
+#subnav .tab-sep:first-child{margin-top:0}
+.lad-row{flex-wrap:wrap;overflow:visible}
+@media (max-width:760px){.sl-list{flex-direction:column;overflow:visible}.sl-list{display:grid!important;grid-template-columns:1fr 1fr;gap:6px}.sl-item{max-width:none}}
 /* v5: tab notation drawn like a printed tab book */
 .tabwrap{overflow:visible}
 .tabsheet{display:block;padding:2px 0 6px}
@@ -1866,7 +1875,7 @@ function smDrum(k,t,v,dest){const z=SM.drum[k]; if(!z)return false; try{const c=
 const hum=(t,v)=>[t+(Math.random()-.5)*.006,v*(.92+Math.random()*.12)];
 
 /* ---------- neck drawing ---------- */
-const NF=15,W=1080,NUT=94,TOP=38,GAP=30;
+const NF=24,W=1560,NUT=94,TOP=38,GAP=30;
 const wire=n=>NUT+(W-NUT-14)*(.45*(n/NF)+.55*((1-Math.pow(2,-n/12))/(1-Math.pow(2,-NF/12))));
 const fx=f=>f===0?NUT-20:(wire(f-1)+wire(f))/2;
 const sy=s=>TOP+(5-s)*GAP;
@@ -1879,14 +1888,14 @@ function neck(marks,opts={}){
   (opts.bands||[]).forEach((b,i)=>{const xa=b.lo<=0?NUT-40:wire(b.lo-1),xb=wire(Math.min(NF,b.hi));
     o+=`<rect class="n-band${b.cur?' cur':i%2?' alt':''}" x="${xa}" y="${y0}" width="${xb-xa}" height="${y1-y0}"/><text class="n-blabel" x="${(xa+xb)/2}" y="${y0-9}">${b.label}</text>`;});
   const mid=(sy(2)+sy(3))/2;
-  [3,5,7,9,15].forEach(f=>{o+=`<circle class="n-inlay" cx="${fx(f)}" cy="${mid}" r="5"/>`});
-  o+=`<circle class="n-inlay" cx="${fx(12)}" cy="${(sy(1)+sy(2))/2}" r="5"/><circle class="n-inlay" cx="${fx(12)}" cy="${(sy(3)+sy(4))/2}" r="5"/>`;
+  [3,5,7,9,15,17,19,21].forEach(f=>{o+=`<circle class="n-inlay" cx="${fx(f)}" cy="${mid}" r="5"/>`});
+  [12,24].forEach(f=>{o+=`<circle class="n-inlay" cx="${fx(f)}" cy="${(sy(1)+sy(2))/2}" r="5"/><circle class="n-inlay" cx="${fx(f)}" cy="${(sy(3)+sy(4))/2}" r="5"/>`;});
   for(let n=1;n<=NF;n++)o+=`<line class="n-fret" x1="${wire(n)}" x2="${wire(n)}" y1="${y0}" y2="${y1}"/>`;
   o+=`<rect class="n-nut" x="${NUT-5}" y="${y0-3}" width="7" height="${y1-y0+6}" rx="2"/>`;
   const sw=[2.6,2.2,1.8,1.4,1.1,.9];
   for(let s=0;s<6;s++){o+=`<line class="n-str" x1="${NUT-44}" x2="${wire(NF)}" y1="${sy(s)}" y2="${sy(s)}" stroke-width="${sw[s]}"/>`;
     o+=`<text class="n-sname" x="14" y="${sy(s)+4}">${SNAME[s]}</text>`;}
-  for(let f=0;f<=NF;f++)o+=`<text class="n-fnum${[3,5,7,9,12,15].includes(f)?' hi':''}" x="${fx(f)}" y="${y1+22}" text-anchor="middle">${f===0?'open':f}</text>`;
+  for(let f=0;f<=NF;f++)o+=`<text class="n-fnum${[3,5,7,9,12,15,17,19,21,24].includes(f)?' hi':''}" x="${fx(f)}" y="${y1+22}" text-anchor="middle">${f===0?'open':f}</text>`;
   (opts.rings||[]).forEach(r=>{const x=fx(r.f),y=sy(r.s); o+=`<circle class="ring ${r.cls||''}" cx="${x}" cy="${y}" r="15"/><text class="ring-t" x="${x}" y="${y+3}">${r.label}</text>`;});
   for(const k in marks){const m=marks[k],[s,f]=k.split('-').map(Number),x=fx(f),y=sy(s);
     o+=`<g class="${m.dim?'m-dim':''}${m.anim?' pop':''}"><circle class="dot ${m.cls}" cx="${x}" cy="${y}" r="12"/>`;
@@ -1896,6 +1905,13 @@ function neck(marks,opts={}){
     o+=`<rect class="hit" data-s="${s}" data-f="${f}" x="${xa}" y="${sy(s)-GAP/2}" width="${xb-xa}" height="${GAP}"><title>${SNAME[s]} string, ${f===0?'open':'fret '+f}</title></rect>`;}}
   return o+'</svg>';
 }
+
+/* the neck is wider than a phone, so keep the notes in view: centre on the marked notes when a neck is drawn, and follow the cursor while a tab plays */
+function neckFollow(svg,x,smooth){if(!svg)return; const wr=svg.closest('.neck-wrap')||svg.parentElement; if(!wr||wr.scrollWidth<=wr.clientWidth+4)return; const k=svg.getBoundingClientRect().width/W,px=x*k,v0=wr.scrollLeft,v1=v0+wr.clientWidth;
+  if(px<v0+40||px>v1-40){const to=Math.max(0,px-wr.clientWidth/2); try{wr.scrollTo({left:to,behavior:smooth===false?'auto':'smooth'});}catch(e){wr.scrollLeft=to;}}}
+function neckCentre(svg){const ds=[...svg.querySelectorAll('circle.dot,circle.ring')].map(c=>+c.getAttribute('cx')).filter(x=>x>0); if(!ds.length)return; const wr=svg.closest('.neck-wrap')||svg.parentElement; if(!wr||wr.scrollWidth<=wr.clientWidth+4)return;
+  const k=svg.getBoundingClientRect().width/W,lo=Math.min(...ds)*k,hi=Math.max(...ds)*k,mid=(lo+hi)/2; wr.scrollLeft=hi-lo<wr.clientWidth-40?Math.max(0,mid-wr.clientWidth/2):Math.max(0,lo-30);}
+try{new MutationObserver(ms=>{const seen=new Set(); ms.forEach(m=>m.addedNodes.forEach(n=>{if(n.nodeType!==1)return; (n.matches&&n.matches('svg.neck')?[n]:[...n.querySelectorAll?n.querySelectorAll('svg.neck'):[]]).forEach(sv=>seen.add(sv));})); if(seen.size)requestAnimationFrame(()=>seen.forEach(neckCentre));}).observe(document.documentElement,{childList:true,subtree:true});}catch(e){}
 function onNeck(el,fn){el.addEventListener('click',e=>{const h=e.target.closest('[data-f]'); if(h)fn(+h.dataset.s,+h.dataset.f);});}
 
 /* ---------- tabs ---------- */
@@ -1911,7 +1927,7 @@ function showTab(t){ if(!TABS.includes(t))t='dash'; if(typeof puStop==='function
   document.querySelectorAll('#groups button').forEach(b=>b.setAttribute('aria-current',String(b.dataset.group===g)));
   const sub=$('subnav'); sub.innerHTML=GROUPS[g].length>1?GROUPS[g].map(([id,l])=>id[0]==='-'?`<span class="tab-sep">${l}</span>`:`<button class="tab" role="tab" data-tab="${id}" aria-selected="${id===t}" tabindex="${id===t?0:-1}">${l}</button>`).join(''):'';
   TABS.forEach(id=>$(id).hidden=id!==t);
-  {const sb=sub.querySelector('[aria-selected="true"]'); if(sb&&sub.scrollWidth>sub.clientWidth)sub.scrollLeft=Math.max(0,sb.offsetLeft-24);}
+  
   if(t==='trainer'&&!tr.cur)trNext();
   if(t==='tabbuilder')tbInit();
   if(t==='songs')renderSongs();
@@ -2661,7 +2677,7 @@ function T(str,o={}){let d=1; return str.trim().split(/\s+/).map(tok=>{let lab='
   const n=tok==='r'?[]:tok.split('+').map(x=>{const m=x.match(/^([hpst])?([EADGBe])(\d+)(?:b(\d)([rR])?)?(~)?(m)?(\*)?$/); if(!m)throw new Error('bad tab token '+x); const o2={s:SIX[m[2]],f:+m[3]};
     if(m[1])o2.tq=m[1]; if(m[4])o2.b=+m[4]; if(m[5])o2.rel=m[5]==='r'?1:2; if(m[6])o2.v=1; if(m[7])o2.pm=1; if(m[8])o2.hm=1; return o2;});
   /* older tabs wrote the technique as a label under the note: turn it into the real thing */
-  if(n.length===1){const x=n[0],L={h:'h',p:'p',sl:'s','/':'s',t:'t',tap:'t'}[lab]; if(L&&!x.tq){x.tq=L; lab='';} else if(lab==='~'){x.v=1; lab='';} else if(lab==='PM'||lab==='pm'){x.pm=1;}}
+  if(n.length===1){const x=n[0],L={h:'h',p:'p',H:'h',P:'p',sl:'s','/':'s',t:'t',T:'t',tap:'t'}[lab]; if(L&&!x.tq){x.tq=L; lab='';} else if(lab==='~'){x.v=1; lab='';} else if(lab==='PM'||lab==='pm'){x.pm=1;}}
   if(!lab&&o.fing&&n.length===1&&n[0].f>=1&&n[0].f<=4)lab=String(n[0].f); if(!lab&&n.some(x=>x.pm))lab='PM'; return {n,d,lab};});}
 const shapeN=sh=>sh.split('').map((c,i)=>c==='x'?null:{s:i,f:+c}).filter(Boolean);
 const SPAT=[['↓',1],['↓',.5],['↑',1],['↑',.5],['↓',.5],['↑',.5]];
@@ -5290,7 +5306,7 @@ function CH2(nm){const m=String(nm).match(/^([A-G])([#b♯♭]?)(.*)$/); if(!m)r
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function TS(str,o){try{return T(str,o)}catch(e){console.warn(e); return [];}}
 function padBars(ev,bpb=4){const tot=ev.reduce((a,e)=>a+e.d,0),r=Math.round((Math.ceil(tot/bpb-1e-6)*bpb-tot)*1000)/1000; if(r>1e-6)ev.push({n:[],d:r,lab:''}); return ev;}
-function xCursor(id,e){const c=$(id); if(!c)return; if(!e||!e.n||!e.n.length){c.setAttribute('cx',-50); return;} const x=e.n[0]; c.setAttribute('cx',fx(x.f)); c.setAttribute('cy',sy(x.s));
+function xCursor(id,e){const c=$(id); if(!c)return; if(!e||!e.n||!e.n.length){c.setAttribute('cx',-50); return;} const x=e.n[0]; c.setAttribute('cx',fx(x.f)); c.setAttribute('cy',sy(x.s)); neckFollow(c.ownerSVGElement,fx(x.f));
   const w=c.closest('.neck-wrap'),svg=c.closest('svg'); if(w&&svg&&w.scrollWidth>w.clientWidth){const px=fx(x.f)/W*svg.clientWidth; if(px<w.scrollLeft+40||px>w.scrollLeft+w.clientWidth-40)w.scrollLeft=px-w.clientWidth/2;}}
 function xNeck(host,ev,key,cur){host.innerHTML=puNeck(ev,key); const s=host.querySelector('svg'); if(s)s.insertAdjacentHTML('beforeend',`<circle class="dx-cur" id="${cur}" r="16" cx="-50" cy="-50"/>`);}
 const KEYSEL=(id,v)=>`<select id="${id}">${ROOT_LABELS.map((l,i)=>`<option value="${i}"${i===v?' selected':''}>${l}</option>`).join('')}</select>`;
@@ -5535,7 +5551,7 @@ Object.assign(STY,{
     what:'The classic rock speed lick: six notes falling down the A minor pentatonic box in triplets, each group starting one string lower.',how:'Alternate pick, down-up, starting with a down-stroke. Feel each group of six as one gesture. Accent the first note of every group. Start at 60 and aim for 120.',why:'It trains string crossing in a pattern your hand will meet in a thousand solos. At 120 it sounds like a flurry; at 70 it sounds like a melody.'},
    {id:'ps2',t:'Climbing repeater',lvl:'Rock · Core',key:9,bpm:72,back:['Am','Am','Am','Am'],ev:'e5:s B8 B5 B8 e5 B8 B5 B8 e5 B8 B5 B8 e5 B8 B5 B8 e8 B10 B8 B10 e8 B10 B8 B10 e8 B10 B8 B10 e8 B10 B8 B10 e10 B13 B10 B13 e10 B13 B10 B13 e10 B13 B10 B13 e10 B13 B10 B13 e12 B15 B13 B15 e12 B15 B13 B15 e12 B15 B13 B15 e12 B15 B13 B15 e17:2/~ r:2',
     what:'A four-note loop on the top two strings that climbs up the neck through four positions of A minor pentatonic, landing on a high A.',how:'Use first and third (or fourth) fingers. Keep the loop going while you slide your hand up to the next position on the bar line. Pick every note.',why:'Repeating licks build stamina and let you hear when the timing is even. Climbing teaches the top strings across the whole neck.'},
-   {id:'ps3',t:'Pull-off cascade',lvl:'Rock · Core',key:9,bpm:66,back:['Am','Am'],ev:'e8:t/p e5 B8 e8/p e5 B8 B8/p B5 G7 B8/p B5 G7 G7/p G5 D7 G7/p G5 D7 D7/p D5 A7 D7/p D5 A7 E5:2/~ r:2',
+   {id:'ps3',t:'Pull-off cascade',lvl:'Rock · Core',key:9,bpm:66,back:['Am','Am'],ev:'e8:t e5/p B8 e8 e5/p B8 B8 B5/p G7 B8 B5/p G7 G7 G5/p D7 G7 G5/p D7 D7 D5/p A7 D7 D5/p A7 E5:2/~ r:2',
     what:'Triplets that pick one note and pull off to the next, rolling down the pentatonic box.',how:'Only the first note of each pair is picked. Pull the string slightly down as you lift off so the lower note rings as loud as the picked one.',why:'Legato gets you speed with half the picking. It also gives a smoother, vocal sound than picking every note.'},
    {id:'ps4',t:'Blues scale waterfall',lvl:'Blues · Core',key:9,bpm:66,swing:true,back:['A7','A7'],ev:'e5:t B8 B5 G8 G7 G5 D7 D5 A7 A6 A5 E8 E5:2/~ e8:.5/b e8b2:1.5/b',
     what:'A fast run down the A blues scale, using the ♭5 (the "blue note") as a passing note, then a bend to finish.',how:'Triplets, alternate picking. The ♭5 notes (G8 and A6) are passing notes: don\'t stop on them. Land on the low A with vibrato.',why:'Descending runs are the easiest way to sound fast. This one teaches the blues scale as a sound, not a shape.'},
@@ -5945,7 +5961,7 @@ Object.assign(STY,{
   {id:'fp1',t:'Low Moon',lvl:'Original · Fingerstyle ballad',key:9,bpm:72,tone:'acoustic',src:'Written for this page',ladder:[56,64,72,80,88],scv:[0,2,3,4,5,6,7,8,9,10,11],
    back:['Am','Am','Am','D','F','F','E','E','Am','Am','Am','D','F','F','E','E','Am','G','F','E','E','E','Am','E','Am','Am','Am','D','F','F','E','Am'],
    ev:()=>TS([ARP('x02210','A0','b G B e B G B G'),ARP('xx2210','E4','b G B e B G B G'),ARP('xx2210','E3','b G B e B G B G'),ARP('xx0232','E2','b G B e B G B G'),ARP('xx3210','D3','b G B e B G B G'),ARP('xx3211','D3','b G B e B G e B'),ARP('022100','E0','b G B e B G B G'),'E0:e G0 hG1 B0 e0 B0 G1 B0',
-     ARP('x02210','A0','b+e5 G B e B+e3 G B G'),ARP('xx2210','E4','b+e7 G B e B+e5 G B G'),ARP('xx2210','E3','b+e8 G B e B+e7 G B G'),ARP('xx0232','E2','b+e5 G B e B+e2 G B G'),ARP('xx3210','D3','b+e3 G B e B+e1 G B G'),ARP('xx3211','D3','b+e1 G B e B+e0 G e B'),ARP('022100','E0','b+e4 G B e B+e0 G B G'),'E0+e0:e G0 hG1 B0 e0 B0 G1 B0',
+     ARP('x02210','A0','b+e5 G B e B+e3 G B G'),ARP('xx2210','E4','b+e7 G B e B+e5 G B G'),ARP('xx2210','E3','b+e8 G B e e7 G B G'),ARP('xx0232','E2','b+e5 G B e B+e2 G B G'),ARP('xx3210','D3','b+e3 G B e B+e1 G B G'),ARP('xx3211','D3','b+e1 G B e B+e0 G e B'),ARP('022100','E0','b+e4 G B e B+e0 G B G'),'E0+e0:e G0 hG1 B0 e0 B0 G1 B0',
      RP('A0+D2+G2+B1+e0:s',4)+' A0+D2+G2+B1+e0:1 A0+D2+G2+B1+e0:.5 A0+D2+G2+B1+e0:.5 A0+D2+G2+B1+e0:1',RP('E3+A2+D0+G0+B0+e3:s',4)+' E3+A2+D0+G0+B0+e3:1 E3+A2+D0+G0+B0+e3:.5 E3+A2+D0+G0+B0+e3:.5 E3+A2+D0+G0+B0+e3:1',
      RP('E1+A3+D3+G2+B1+e1:s',4)+' E1+A3+D3+G2+B1+e1:1 E1+A3+D3+G2+B1+e1:.5 E1+A3+D3+G2+B1+e1:.5 E1+A3+D3+G2+B1+e1:1',RP('E0+A2+D2+G1+B0+e0:s',4)+' E0+A2+D2+G1+B0+e0:1 E0+A2+D2+G1+B0+e0:.5 E0+A2+D2+G1+B0+e0:.5 E0+A2+D2+G1+B0+e0:1',
      'e1:s e0 B3 B1 B0 G2 G1 D3 D2 A3 A2 A0 E1 E0 E1 E0','E0:s E1 A0 A2 A3 D2 D3 G1 G2 B0 B1 B3 e0 e1 e0 B3',RP('A0+D2+G2+B1+e0:s',4)+' A0+D2+G2+B1+e0:1 A0+D2+G2+B1+e0:.5 A0+D2+G2+B1+e0:.5 A0+D2+G2+B1+e0:1','E0+A2+D2+G1+B0+e0:4',
@@ -5965,7 +5981,7 @@ Object.assign(STY,{
    famous:[['The Boxer','Simon & Garfunkel','Travis picking with a moving bass and melody on top.'],['Dust in the Wind','Kansas','A rolling pattern over changing chords.'],['Blackbird','The Beatles','Melody and bass played together by one hand.'],['Fire and Rain','James Taylor','Travis-style fingerpicking under a sung melody.']]},
   {id:'fp3',t:'Drop D Drive',lvl:'Original · Drop D groove',key:2,bpm:84,tone:'acoustic',tune:[-2,0,0,0,0,0],tuneName:'Drop D (D A D G B E): tune the low E string down a whole step to D',src:'Written for this page',ladder:[70,78,84,92,100,110],scv:[0,2,4,5,7,9,10,11],
    back:['D5','D5','G5','A5','D5','D5','G5','A5','D5','D5','G5','A5','D5'],
-   ev:'E0+A0+D0:e E0 x E0 E0 G0 x hG2 E0+B3:e E0 x pB0 E0 G2 x G0 E5+A5:e E5 x E5 E5 G0 x G2 E7+A7:e E7 x E7 E7 B5 x B3 E0+G2:e E0 x G4 E0 sG7 x G4 E0+B7:e E0 x B5 E0 B7 x B10 E5+A5+D5:e E5 x E5 E5 D4 x D5 E7+A7+D7:e E7 x E7 E0+A0+D0:2 E0+A0+D0:e E0 x E0 E0 G0 x hG2 E0+B3:e E0 x pB0 E0 G2 x G0 E5+A5:e E5 x E5 E5 G0 x G2 E7+A7:e E7 x E7 E7 B5 x B3 E12*+D12*+G12*:4',
+   ev:'E0+A0+D0:e E0 x E0 E0 G0 x hG2 E0+B3:e E0 x B0 E0 G2 x G0 E5+A5:e E5 x E5 E5 G0 x G2 E7+A7:e E7 x E7 E7 B5 x B3 E0+G2:e E0 x G4 E0 sG7 x G4 E0+B7:e E0 x B5 E0 B7 x B10 E5+A5+D5:e E5 x E5 E5 D4 x D5 E7+A7+D7:e E7 x E7 E0+A0+D0:2 E0+A0+D0:e E0 x E0 E0 G0 x hG2 E0+B3:e E0 x B0 E0 G2 x G0 E5+A5:e E5 x E5 E5 G0 x G2 E7+A7:e E7 x E7 E7 B5 x B3 E12*+D12*+G12*:4',
    what:'A modern acoustic groove in drop D: the thumb drives the low D, a slap marks beats 2 and 4, and the fingers add melody with hammer-ons and slides. It ends on natural harmonics.',
    how:'x is a percussive slap: bring the side of your thumb or palm down on the strings near the soundhole. Keep the thumb pulsing eighth notes on the low string under everything. <12> means a harmonic: touch the string lightly right over the 12th fret wire and pick it.',
    why:'Drop D gives a huge low end and lets you play power chords with one finger. Percussive grooves like this are how one guitar sounds like a whole band.',
@@ -6404,6 +6420,28 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-sl]'); if(
   const hh=e.target.closest('[data-slh]'); if(hh){slPlay(SL[SIMP.cur].hear[+hh.dataset.slh][1]); return;}
   const q=e.target.closest('[data-slq]'); if(q){const L=SL[SIMP.cur],k=+q.dataset.slq,ok=k===L.q[2]; q.parentElement.querySelectorAll('button').forEach((b,j)=>{b.classList.toggle('right',j===L.q[2]&&ok); b.classList.toggle('wrong',j===k&&!ok);});
     $('sl-qf').innerHTML=(ok?'<b>Right.</b> ':'<b>Not quite.</b> ')+L.q[3];}});
+
+/* tab check: flags moves no hand can make. Run by tests/check-tabs.js on every change */
+function tabLint(ev){const res=[],last={};
+  ev.forEach((e,i)=>{const fr=e.n.filter(x=>x.f>0&&x.tq!=='t').map(x=>x.f);
+    if(fr.length>1&&Math.max(...fr)-Math.min(...fr)>5)res.push(`#${i}: stretch from fret ${Math.min(...fr)} to ${Math.max(...fr)} in one chord`);
+    e.n.forEach(x=>{const pv=last[x.s],near=pv&&pv.i===i-1;
+      if(x.tq==='h'||x.tq==='p'){
+        if(x.tq==='p'&&!near)res.push(`#${i}: pull-off to fret ${x.f} with no note just before it on that string`);
+        if(near){const d=x.f-pv.f; if(x.tq==='h'&&d<=0)res.push(`#${i}: hammer-on goes down (${pv.f} to ${x.f})`); if(x.tq==='p'&&d>=0)res.push(`#${i}: pull-off goes up (${pv.f} to ${x.f})`);
+          if(Math.abs(d)>5&&!pv.tap&&x.f!==0&&pv.f!==0)res.push(`#${i}: ${x.tq==='h'?'hammer-on':'pull-off'} spans ${Math.abs(d)} frets (${pv.f} to ${x.f}) with no tap`);
+          if(Math.abs(d)>7&&!pv.tap&&(x.f===0||pv.f===0))res.push(`#${i}: open-string ${x.tq==='h'?'hammer-on':'pull-off'} from fret ${pv.f} to ${x.f}`);}}
+      if(x.b&&x.f===0)res.push(`#${i}: bend on an open string`);
+      if(x.b&&(x.b>4))res.push(`#${i}: bend of more than two steps`);
+      if(x.tq==='t'&&near&&x.f<=pv.f)res.push(`#${i}: tap at or below the fretted note`);
+      if(x.f>24)res.push(`#${i}: fret ${x.f} is past the 24th fret`);});
+    const cur={}; e.n.forEach(x=>cur[x.s]={f:x.f,i,tap:x.tq==='t'}); Object.assign(last,cur);});
+  return res;}
+function tabLintAll(){const out=[]; const add=(id,ev)=>{try{tabLint(ev).forEach(m=>out.push(id+' '+m));}catch(e){out.push(id+' could not be read: '+e.message);}};
+  Object.values(STY_BY).forEach(x=>add(x.id+' ('+x.t+')',stEv(x)));
+  SL.forEach((L,k)=>add('theory lesson '+(k+1),T(L.tab.s)));
+  TB_EX.forEach(x=>add('tab builder: '+x.n,x.ev));
+  return out;}
 function renderStyle(tab){const H=STY[tab],h=$(tab); if(!H||!h)return; if(stP){stP.stop(); stP=null;}
   Object.keys(STY).forEach(k=>{if(k!==tab&&$(k))$(k).innerHTML='';});
   const cur=STY_BY[SS.cur[H.k]]&&STY_BY[SS.cur[H.k]].hub===H?STY_BY[SS.cur[H.k]]:H.items[0], nd=H.items.filter(x=>SS.done[x.id]).length,PL=spdPlan(cur);
@@ -6602,7 +6640,7 @@ const nName=m=>SHARP[mod(Math.round(m))];
 const nNameO=m=>{const r=Math.round(m); return SHARP[mod(r)]+(Math.floor(r/12)-1);};
 const latency=()=>{if(typeof LSD.lat==='number')return LSD.lat; let c=null; try{c=ac();}catch(e){} return ((c&&c.outputLatency)||0)+((c&&c.baseLatency)||0)+.04;};
 const sampleT=k=>MIC.t0+k/MIC.sr;
-function yin(x,W,sr){const half=W>>1,tmin=Math.max(2,Math.floor(sr/1050)),tmax=Math.min(half-2,Math.ceil(sr/68));
+function yin(x,W,sr){const half=W>>1,tmin=Math.max(2,Math.floor(sr/1400)),tmax=Math.min(half-2,Math.ceil(sr/68));
   const d=new Float32Array(tmax+2); for(let tau=1;tau<=tmax+1;tau++){let s=0; for(let i=0;i<half;i++){const v=x[i]-x[i+tau]; s+=v*v;} d[tau]=s;}
   let run=0; d[0]=1; for(let tau=1;tau<=tmax+1;tau++){run+=d[tau]; d[tau]=run?d[tau]*tau/run:1;}
   let tau=-1; for(let t=tmin;t<=tmax;t++){if(d[t]<.14){while(t+1<=tmax&&d[t+1]<d[t])t++; tau=t; break;}}
@@ -6613,7 +6651,7 @@ function ringCopy(kEnd,n,out){for(let i=0;i<n;i++){const k=kEnd-n+1+i; out[i]=k>
 function analyse(){const k=MIC.total-1,W=MIC.W,H=MIC.HOP,x=ringCopy(k,W,MIC.win); 
   let e=0,pk=0; for(let i=W-H;i<W;i++){e+=x[i]*x[i]; pk=Math.max(pk,Math.abs(x[i]));} const db=10*Math.log10(e/H+1e-12);
   const tf=sampleT(k);
-  let m=null,cl=0; if(db>Math.max(-62,MIC.floor+9)){const r=yin(x,W,MIC.sr); if(r&&r.cl>.78&&r.f>68&&r.f<1050){m=midiF(r.f); cl=r.cl;}}
+  let m=null,cl=0; if(db>Math.max(-62,MIC.floor+9)){const r=yin(x,W,MIC.sr); if(r&&r.cl>.78&&r.f>68&&r.f<1400){m=midiF(r.f); cl=r.cl;}}
   const prev=MIC.dbs.slice(-4),pmin=prev.length?Math.min(...prev):-100; MIC.dbs.push(db); if(MIC.dbs.length>8)MIC.dbs.shift();
   MIC.floor=db<MIC.floor?db:Math.min(-30,MIC.floor+.04);
   let onset=false;
@@ -7151,7 +7189,7 @@ function onTab(t){
   window.addEventListener('beforeinstallprompt',e=>{e.preventDefault(); const sl=document.querySelector('.topbar .soundline'); if(!sl||$('pwa-go'))return;
     sl.insertAdjacentHTML('afterbegin','<button class="btn small" id="pwa-go">📲 Install app</button> '); $('pwa-go').onclick=()=>{e.prompt(); $('pwa-go').remove();};});
 }catch(e){}})();
-window.V3={go:showTab,tabs:TABS,SM,smLoad,T,STY_BY,stEv,AX,SND,masterIn,playNote,jKick,jSnare,jHat,jBass,ac,ampReset,tabSVG,EC,tr,jlPaint,trMic,micOn,micOff,lsAttach,drumStyle,drumBeat,wake,focus,onTab,heroCard,jamStopped:()=>{},MIC,LSD};
+window.V3={go:showTab,tabs:TABS,SM,smLoad,T,STY_BY,stEv,AX,SND,masterIn,playNote,jKick,jSnare,jHat,jBass,ac,ampReset,tabSVG,tabLint,tabLintAll,EC,tr,jlPaint,trMic,micOn,micOff,lsAttach,drumStyle,drumBeat,wake,focus,onTab,heroCard,jamStopped:()=>{},MIC,LSD};
 })();
 
 const h0=(location.hash||'').slice(1); showTab(TABS.includes(h0)?h0:'dash'); setTimeout(()=>window.scrollTo(0,0),60);

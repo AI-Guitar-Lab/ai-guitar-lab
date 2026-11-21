@@ -21,6 +21,9 @@ A free guitar practice app that runs in your browser. It covers theory, techniqu
 - **Tab drawn like a tab book.** Lines wrap down the screen to fit your phone or computer, so there's no sideways scrolling. During playback the page scrolls itself to follow along, so both hands stay on the guitar. The notation is drawn in the style of pro tab software: curved bend arrows marked ½, full or 1½, releases and pre-bends, slurs with H and P for hammer-ons and pull-offs, slide lines, wavy vibrato lines, P.M. brackets, harmonics, tapping, bar numbers and the rhythm under every note.
 - **Speed coach on every lick.** Each lick gets a start tempo, a target tempo and a step. You can raise the tempo yourself, let it go up automatically every two loops, or turn on the Listen coach, which goes up a step after two passes scoring 90 or more. A Bursts mode plays one beat, two beats or a bar at the target tempo. There's also a short guide to building speed, with yardsticks for 16th notes at intermediate, advanced and shred levels. The finger drills get a start tempo and target tempo too.
 - **Theory made simple.** Sixteen short lessons, one idea each. Every lesson has the idea in one sentence, sounds to hear, the shape on the neck, a tab to play, famous songs that use it, a two-minute task and a quick check.
+- **The full neck.** Every fretboard now runs from the open strings to the 24th fret, and it scrolls itself to keep the notes in view on a phone. Listen mode hears notes all the way up to the 24th fret.
+- **Every page in view.** The pages under Practice, Theory and the other sections now wrap onto several lines, so you can see and tap every one without scrolling sideways.
+- **Playable tabs, checked automatically.** A checker reads every tab and flags anything no hand can play: long hammer-ons or pull-offs without a tap, hammer-ons that go down, pull-offs with nothing to pull from, chord stretches wider than 5 frets and bends on open strings. It runs on every push (see `tests/check-tabs.js`).
 - **Easier first.** In Practice, the shorter, easier pieces come first, and the longer, faster ones sit under "Go further".
 
 ## What's inside
@@ -57,7 +60,7 @@ We're open to suggestions, recommendations and fixes, and we'd love to hear from
 
 - **Found a bug, or have an idea or a lesson request?** [Open an issue](https://github.com/AI-Guitar-Lab/ai-guitar-lab/issues/new). Tell us which page you were on, what you expected and what happened. For a tab or theory mistake, name the lesson or lick. You'll need a free GitHub account.
 - **Want to see what's already been suggested?** Browse the [issues list](https://github.com/AI-Guitar-Lab/ai-guitar-lab/issues), and add a 👍 or a comment to anything you'd like too.
-- **Want to fix something yourself?** The whole app is one file, `index.html`. Fork the repository, make your change and open a pull request that explains what it fixes.
+- **Want to fix something yourself?** The whole app is one file, `index.html`. Fork the repository, make your change and open a pull request that explains what it fixes. Before you open it, run `node tests/check-tabs.js` (it needs Node and Playwright) to make sure every tab is still playable. GitHub runs the same check on every push and pull request.
 
 There's also a "Suggest an idea or report a bug" link at the bottom of every page in the app.
 
